@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\OrderRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +25,25 @@ class Order
 
     #[ORM\Column]
     private ?float $unitPrice = null;
+
+    /**
+     * @var Collection<int, Unit>
+     */
+    #[ORM\ManyToMany(targetEntity: Unit::class, mappedBy: 'orders')]
+    private Collection $units;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Offer $offer = null;
+
+    #[ORM\ManyToOne(inversedBy: 'orders')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Customer $customer = null;
+
+    public function __construct()
+    {
+        $this->units = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -61,6 +82,57 @@ class Order
     public function setUnitPrice(float $unitPrice): static
     {
         $this->unitPrice = $unitPrice;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Unit>
+     */
+    public function getUnits(): Collection
+    {
+        return $this->units;
+    }
+
+    public function addUnit(Unit $unit): static
+    {
+        if (!$this->units->contains($unit)) {
+            $this->units->add($unit);
+            $unit->addOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnit(Unit $unit): static
+    {
+        if ($this->units->removeElement($unit)) {
+            $unit->removeOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function getOffer(): ?Offer
+    {
+        return $this->offer;
+    }
+
+    public function setOffer(?Offer $offer): static
+    {
+        $this->offer = $offer;
+
+        return $this;
+    }
+
+    public function getCustomer(): ?Customer
+    {
+        return $this->customer;
+    }
+
+    public function setCustomer(?Customer $customer): static
+    {
+        $this->customer = $customer;
 
         return $this;
     }
