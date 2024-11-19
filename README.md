@@ -1,1 +1,1 @@
-![alt text](<MCD.png>)
+![alt text](</assets/images/MCD.png>)
