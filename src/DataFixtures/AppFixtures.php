@@ -12,6 +12,7 @@ use App\Entity\State;
 use App\Entity\Unit;
 use App\Entity\UnitType;
 use App\Entity\User;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -37,6 +38,12 @@ class AppFixtures extends Fixture
             ["Pack Pro",20,25],
             ["Acheter une unité",0,1],
         ];
+        $orderDates = [
+            [new DateTimeImmutable("2024-01-01"), new DateTimeImmutable("2024-06-01")],
+            [new DateTimeImmutable("2024-04-08"), new DateTimeImmutable("2024-10-08")],
+            [new DateTimeImmutable("2023-04-18"), new DateTimeImmutable("2024-11-18")],
+        ];
+
         $currentCustomers = [];
         $currentOffers = [];
 
@@ -118,9 +125,11 @@ class AppFixtures extends Fixture
         // ADDING DATA FOR ORDER
         for ($i=0; $i < 3; $i++) {
             $newOrder = new Order();
+            $newOrder->setStartDate($orderDates[$i][0]);
+            $newOrder->setEndDate($orderDates[$i][1]);
             $newOrder->setCustomer($currentCustomers[$i]);
             $newOrder->setOffer($currentOffers[$i]);
-            $newOrder->setUnitPrice("10");
+            $newOrder->setUnitPrice($setting->getValue());
             $manager->persist($newOrder);
         }
 
