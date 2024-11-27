@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping\DiscriminatorMap;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\InheritanceType('SINGLE_TABLE')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
-#[DiscriminatorMap(['customer' => Customer::class])]
+#[DiscriminatorMap(['customer' => Customer::class, 'user' => User::class])]
 class User
 {
     #[ORM\Id]

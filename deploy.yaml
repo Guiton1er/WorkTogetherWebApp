@@ -1,0 +1,42 @@
+import: 
+  - recipe/symfony.php
+  - contrib/yarn.php
+
+config:
+  application: 'WorkTogetherWebApp'
+  repository: 'git@github.com:Guiton1er/WorkTogetherWebApp.git'
+  keep_releases: 3
+
+hosts:
+  10.192.65.5:
+    remote_user: deployuser
+    user: root
+    deploy_path: '/var/www/WorkTogetherWebApp'
+    writable_mode: 'chmod'
+    composer_options: '--no-dev --verbose --prefer-dist --optimize-autoloader --no-progress --no-interaction'
+    port: 22
+    identity_file: ~/.ssh/id_debian_openebula
+    branch: main
+    env:
+      APP_ENV: prod
+      APP_DEBUG: 0
+
+tasks:
+  deploy:upload_assets:
+    - run: "mkdir -p {{release_path}}/public/build"
+    - upload:
+        src: './public/build'
+        dest: '{{release_path}}/public'
+
+  deploy:build:
+    - runLocally: 'yarn install'
+    - runLocally: 'yarn encore production'
+
+  deploy:change_ownership:
+    - run: 'chown -R deployuser:www-data {{release_path}}'
+
+after:
+  deploy:failed: 'deploy:unlock'
+  deploy:vendors: 'deploy:build'
+  deploy:build: 'deploy:upload_assets'
+  deploy:upload_assets: 'deploy:change_ownership'

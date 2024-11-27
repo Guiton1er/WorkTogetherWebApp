@@ -20,9 +20,22 @@ class AppFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $states = ["OK" => "#02c41c", "Arrêt" => "#36010d", "Incident" => "#fcba03", "Maintenance" => "#04d6d6"];
-        $unitTypes = ["Serveur Web" => "#47a7c9", "Stockage" => "#616161", "Base de donnée" => "#3fba60"];
-        $interventionType = ["Incident" => "#fcba03", "Maintenance" => "#04d6d6"];
+        $states = [
+            "OK" => "#02c41c", 
+            "Arrêt" => "#36010d", 
+            "Incident" => "#fcba03", 
+            "Maintenance" => "#04d6d6"
+        ];
+        $unitTypes = [
+            "Inutilisé" => "#403f3f",
+            "Serveur Web" => "#47a7c9", 
+            "Stockage" => "##6e6b6b", 
+            "Base de donnée" => "#3fba60"
+        ];
+        $interventionType = [
+            "Incident" => "#fcba03", 
+            "Maintenance" => "#04d6d6"
+        ];
         $customers = [
             ["Lucas","Alleaume","lucassis@breizh.br","lucas29"],
             ["Killian","Bonneau","kikibobo@cepapho.fr","password"],
@@ -46,6 +59,8 @@ class AppFixtures extends Fixture
 
         $currentCustomers = [];
         $currentOffers = [];
+        $currentStates = [];
+        $currentTypes = [];
 
         $setting = new Setting();
         $setting->setSettingKey("currentUnitPrice");
@@ -57,15 +72,17 @@ class AppFixtures extends Fixture
             $state = new State();
             $state->setName($key);
             $state->setColor($value);
+            array_push($currentStates, $state);
             $manager->persist($state);
         }
 
         // ADDING DATA FOR UNITTYPE
         foreach ($unitTypes as $key => $value) { 
-            $unit = new UnitType();
-            $unit->setReference($key);
-            $unit->setColor($value);
-            $manager->persist($unit);
+            $unitType = new UnitType();
+            $unitType->setReference($key);
+            $unitType->setColor($value);
+            array_push($currentTypes, $unitType);
+            $manager->persist($unitType);
         }
 
         // ADDING DATA FOR INTERVENTIONTYPE
@@ -83,8 +100,10 @@ class AppFixtures extends Fixture
             $manager->persist($bay);
             for ($j=1; $j < 43; $j++) { 
                 $unit = new Unit();
-                $unit->setReference($bay->getReference() + str_pad($j, 4, "-U00", STR_PAD_LEFT));
+                $unit->setReference($bay->getReference() . str_pad($j, 4, "-U00", STR_PAD_LEFT));
                 $unit->setBay($bay);
+                $unit->setState($currentStates[1]);
+                $unit->setType($currentTypes[0]);
                 $manager->persist($unit);
             }
         }
@@ -115,9 +134,9 @@ class AppFixtures extends Fixture
         // ADDING DATA FOR OFFER
         foreach ($offers as $offer) {
             $newOffer = new Offer();
-            $newOffer->setName($user[0]);
-            $newOffer->setPromotionPercentage($user[1]);
-            $newOffer->setUnitLimit($user[2]);
+            $newOffer->setName($offer[0]);
+            $newOffer->setPromotionPercentage($offer[1]);
+            $newOffer->setUnitLimit($offer[2]);
             array_push($currentOffers,$newOffer);
             $manager->persist($newOffer);
         }
