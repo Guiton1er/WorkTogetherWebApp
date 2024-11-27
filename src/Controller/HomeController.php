@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Repository\OfferRepository;
+use App\Repository\SettingRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\MailerInterface;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(OfferRepository $offerRepository, MailerInterface $mailer): Response
+    public function index(OfferRepository $offerRepository, SettingRepository $settingRepository /*, MailerInterface $mailer*/): Response
     {
         /*
         $email = (new Email())
@@ -29,10 +30,12 @@ class HomeController extends AbstractController
         $mailer->send($email);
         */
 
-        $offers = $offerRepository->findAll();
+        $offers = $offerRepository->findBy(array("available" => true));
+        $unitPrice = $settingRepository->findOneBy(["settingKey" => "currentUnitPrice"]);
 
         return $this->render('home/index.html.twig', [
             'offers' => $offers,
+            'unitPrice' => intval($unitPrice->getValue(), 10),
         ]);
     }
 }

@@ -4,17 +4,20 @@
 
 {% block body %}
     <div class="d-flex flex-column m-4 gap-2">
+
         <h3>Offres disponibles</h3>
-        {% for vehicle in vehicles %}
-                <div class="d-flex flex-row gap-2 p-2 mx-4 bg-dark text-white rounded">
-                    <img src={{ vehicle.picturePath }} style="height: 180px; width: auto">
-                    <div class="d-flex flex-column">
-                        <p class="h3">{{ vehicle.model.brand.name }} {{ vehicle.model.name }}</p>
-                        <p>Type : {{ vehicle.type.name }}</p>
-                        <p>Capacité : {{ vehicle.capacity }} passagers</p>
-                        <p>Tarif de location : {{ vehicle.price }}€ par jour</p>
-                    </div>
+
+        {% for offer in offers %}    
+            <div class="d-flex flex-column gap-2 p-2 mx-4 bg-dark text-white rounded">
+                <p class="h3">{{ offer.name }}</p>
+                <p>Nombre d'unités avec cette offre : {{ offer.unitLimit }}</p>
+                <div class="d-flex flex-row gap-2">
+                    <p>Prix : </p> 
+                    <p class="font-weight-light text-decoration-line-through">{{ unitPrice }}€ </p>
+                    <p>{{ unitPrice * ( 1 - ( offer.promotionPercentage / 100 )) }}€ ( -{{ offer.promotionPercentage }}% )</p>
                 </div>
+            </div>
         {% endfor %}
+
     </div>
 {% endblock %}
