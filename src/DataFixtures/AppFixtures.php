@@ -47,9 +47,9 @@ class AppFixtures extends Fixture
             ["Tawfiq","CADI TAZI","tawfiq@tropfort.com","Not24Get"],
         ];
         $offers = [
-            ["Black Friday",30,10],
-            ["Pack Pro",20,25],
-            ["Acheter une unité",0,1],
+            ["Black Friday",30,10,false],
+            ["Pack Pro",20,25,true],
+            ["Acheter une unité",0,1,true],
         ];
         $orderDates = [
             [new DateTimeImmutable("2024-01-01"), new DateTimeImmutable("2024-06-01")],
@@ -137,6 +137,7 @@ class AppFixtures extends Fixture
             $newOffer->setName($offer[0]);
             $newOffer->setPromotionPercentage($offer[1]);
             $newOffer->setUnitLimit($offer[2]);
+            $newOffer->setAvailable($offer[3]);
             array_push($currentOffers,$newOffer);
             $manager->persist($newOffer);
         }

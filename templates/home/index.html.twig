@@ -3,6 +3,18 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-<div>
-</div>
+    <div class="d-flex flex-column m-4 gap-2">
+        <h3>Offres disponibles</h3>
+        {% for vehicle in vehicles %}
+                <div class="d-flex flex-row gap-2 p-2 mx-4 bg-dark text-white rounded">
+                    <img src={{ vehicle.picturePath }} style="height: 180px; width: auto">
+                    <div class="d-flex flex-column">
+                        <p class="h3">{{ vehicle.model.brand.name }} {{ vehicle.model.name }}</p>
+                        <p>Type : {{ vehicle.type.name }}</p>
+                        <p>Capacité : {{ vehicle.capacity }} passagers</p>
+                        <p>Tarif de location : {{ vehicle.price }}€ par jour</p>
+                    </div>
+                </div>
+        {% endfor %}
+    </div>
 {% endblock %}

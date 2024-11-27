@@ -14,6 +14,7 @@ class HomeController extends AbstractController
     #[Route('/', name: 'app_home')]
     public function index(OfferRepository $offerRepository, MailerInterface $mailer): Response
     {
+        /*
         $email = (new Email())
             ->from('hello@example.com')
             ->to('you@example.com')
@@ -26,9 +27,12 @@ class HomeController extends AbstractController
             ->html('<p>See Twig integration for better HTML integration!</p>');
 
         $mailer->send($email);
+        */
+
+        $offers = $offerRepository->findAll();
 
         return $this->render('home/index.html.twig', [
-            'offerRepository' => $offerRepository,
+            'offers' => $offers,
         ]);
     }
 }
