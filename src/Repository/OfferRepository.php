@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Offer;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,6 +18,19 @@ class OfferRepository extends ServiceEntityRepository
         parent::__construct($registry, Offer::class);
     }
 
+    public function findMostPopular(){
+        $rsm = new ResultSetMapping();
+        // build rsm here
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(Offer::class, 'offer');
+
+        $query = $this->getEntityManager()->createNativeQuery('
+                CALL OffersPopularity()
+            ', $rsm);
+
+        $offers = $query->getResult();
+        return $offers;
+    }
 //    /**
 //     * @return Offer[] Returns an array of Offer objects
 //     */

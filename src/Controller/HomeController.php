@@ -12,7 +12,7 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
+    #[Route('/', name: 'home')]
     public function index(OfferRepository $offerRepository, SettingRepository $settingRepository /*, MailerInterface $mailer*/): Response
     {
         /*
@@ -32,10 +32,12 @@ class HomeController extends AbstractController
 
         $offers = $offerRepository->findBy(array("available" => true));
         $unitPrice = $settingRepository->findOneBy(["settingKey" => "currentUnitPrice"]);
-
+        $mostPopulars = $offerRepository->findMostPopular();
+        
         return $this->render('home/index.html.twig', [
             'offers' => $offers,
             'unitPrice' => intval($unitPrice->getValue(), 10),
+            'mostPopulars' => $mostPopulars,
         ]);
     }
 }

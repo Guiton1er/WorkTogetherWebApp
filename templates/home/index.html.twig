@@ -19,5 +19,10 @@
             </div>
         {% endfor %}
 
+        <h3>Offres les plus populaires</h3>
+        {% for mostPopular in mostPopulars %}
+            {{ mostPopular.name }}
+        {% endfor %}
+
     </div>
 {% endblock %}

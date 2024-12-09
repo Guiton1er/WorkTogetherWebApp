@@ -10,9 +10,27 @@
         {% endblock %}  
     </head>
     <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
+        <div class="d-flex flex-row justify-content-between p-3 px-4 bg-dark text-white">
+            <button class="bg-light text-dark p-2 font-weight-bold my-auto rounded">
+                <a href="{{ path('home') }}" class="text-dark p-2 font-weight-bold text-decoration-none">
+                    Home
+                </a>    
+            </button>
+            <div class="d-flex flex-column justify-content-center">
+                <h1 class="align-self-center">Work Together</h1>
+            </div>
+            <button class="bg-light text-dark p-2 font-weight-bold my-auto rounded">
+                <a href="" class="text-dark p-2 font-weight-bold text-decoration-none">Log in</a>    
+            </button>
+        </div>
+        <div class="container my-4 p-2 bg-white shadow">
+            {% block body %}{% endblock %}
+        </div>
     </body>
+    <footer class="d-flex flex-column flex-grow-1 justify-content-center p-4 bg-dark text-white">
+        <div class="align-self-center">&copy; WorkTogether 2024, tous droits réservés</div>
+    </footer class="position-absolute bottom-0">
+    {% block javascripts %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 </html>
