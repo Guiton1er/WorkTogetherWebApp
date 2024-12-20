@@ -13,16 +13,21 @@
                 <p>Nombre d'unités avec cette offre : {{ offer.unitLimit }}</p>
                 <div class="d-flex flex-row gap-2">
                     <p>Prix : </p> 
-                    <p class="font-weight-light text-decoration-line-through">{{ unitPrice }}€ </p>
-                    <p>{{ unitPrice * ( 1 - ( offer.promotionPercentage / 100 )) }}€ ( -{{ offer.promotionPercentage }}% )</p>
+                    {% if offer.promotionPercentage == 0 %}
+                        <p>{{ unitPrice }}€</p>
+                    {% else %}
+                        <p class="font-weight-light text-decoration-line-through">{{ unitPrice }}€ </p>
+                        <p>{{ unitPrice * ( 1 - ( offer.promotionPercentage / 100 )) }}€ ( -{{ offer.promotionPercentage }}% )</p>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
 
+        {#
         <h3>Offres les plus populaires</h3>
         {% for mostPopular in mostPopulars %}
             {{ mostPopular.name }}
         {% endfor %}
-
+        #}
     </div>
 {% endblock %}
