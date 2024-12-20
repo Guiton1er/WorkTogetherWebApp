@@ -18,7 +18,7 @@ hosts:
     identity_file: ~/.ssh/id_debian_openebula
     branch: main
     env:
-      APP_ENV: prod
+      APP_ENV: dev
       APP_DEBUG: 0
 
 tasks:
