@@ -49,6 +49,8 @@ class AppFixtures extends Fixture
         $offers = [
             ["Black Friday",30,10,false],
             ["Pack Pro",20,25,true],
+            ["Pack Débutant",15,5,true],
+            ["Pack Entreprise",50,42,true],
             ["Acheter une unité",0,1,true],
         ];
         $orderDates = [

@@ -4,30 +4,53 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>{% block title %}Work Together{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+         <link rel="icon" href="{{ asset("images/logo.webp") }}"> 
         {% block stylesheets %}
             {{ encore_entry_link_tags('app') }}
         {% endblock %}  
     </head>
     <body>
         <div class="d-flex flex-row justify-content-between p-1 px-3 bg-primary text-white">
-            <a href="{{ path('home') }}" class="text-dark font-weight-bold my-auto text-decoration-none">
-                <img src="{{ asset("images/logo.webp") }}" style="height: 80px; width: auto"/>
-            </a>
-            <div class="d-flex flex-column justify-content-center">
-                <h1 class="align-self-center">Work Together</h1>
+
+            <div class="d-flex flex-row justify-content-center gap-4">
+                <a href="{{ path('home') }}" class="my-auto text-decoration-none">
+                    <img src="{{ asset("images/logo.webp") }}" style="height: 80px; width: auto"/>
+                </a>
+                <h1 class="align-self-center">WorkTogether</h1>
             </div>
-            <button class="bg-light text-dark p-2 font-weight-bold my-auto rounded">
-                <a href="" class="text-dark p-2 font-weight-bold text-decoration-none">Log in</a>    
-            </button>
+
+            <div class="d-flex flex-row justify-content-center gap-2">
+
+                <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                    <a href="{{ path('offers') }}" class="text-white p-2 font-weight-bold text-decoration-none">Offres</a>    
+                </button>
+
+                <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                    <a href="{{ path('orders') }}" class="text-white p-2 font-weight-bold text-decoration-none">Commandes</a>    
+                </button>
+
+                {% if not is_granted("IS_AUTHENTIFICATED_FULLY") %}
+                    <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                        <a href="" class="text-white p-2 font-weight-bold text-decoration-none">Se connecter</a>    
+                    </button>
+                {% else %}
+                    <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                        <a href="{{ path('profil') }}" class="text-white p-2 font-weight-bold text-decoration-none">Profil</a>    
+                    </button>
+                {% endif %}
+            </div>
         </div>
+
         <div class="container my-4 p-2 bg-white shadow">
             {% block body %}{% endblock %}
         </div>
+
     </body>
-    <footer class="d-flex flex-column flex-grow-1 justify-content-center p-4 bg-primary text-white">
+
+    <footer class="d-flex flex-column flex-grow-1 justify-content-center p-2 bg-primary text-white fixed-bottom">
         <div class="align-self-center">&copy; WorkTogether 2024, tous droits réservés</div>
     </footer>
+
     {% block javascripts %}
         {{ encore_entry_link_tags('app') }}
     {% endblock %}

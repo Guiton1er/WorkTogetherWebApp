@@ -3,31 +3,13 @@
 {% block title %}Accueil{% endblock %}
 
 {% block body %}
-    <div class="d-flex flex-column m-4 gap-2">
+    <div class="d-flex flex-row m-4 gap-2">
 
-        <h3>Offres disponibles</h3>
+        <div class="d-flex flex-column m-4 gap-2">
+            <h1 class="size-50">WorkTogether Data Solutions</h1>
+            <p>WorkTogether Data Solutions est une entreprise spécialisée dans la gestion de datacenters de pointe. Forte de son expertise en matière de sécurité, de fiabilité et de durabilité, WorkTogether offre une gamme complète de services de gestion de datacenters aux entreprises du monde entier. Son objectif principal est de permettre à ses clients de se concentrer sur leur cœur de métier tout en garantissant la disponibilité, la performance et la sécurité de leurs infrastructures informatiques.</p>
+        </div>
 
-        {% for offer in offers %}    
-            <div class="d-flex flex-column gap-2 p-2 mx-4 bg-dark text-white rounded">
-                <p class="h3">{{ offer.name }}</p>
-                <p>Nombre d'unités avec cette offre : {{ offer.unitLimit }}</p>
-                <div class="d-flex flex-row gap-2">
-                    <p>Prix : </p> 
-                    {% if offer.promotionPercentage == 0 %}
-                        <p>{{ unitPrice }}€</p>
-                    {% else %}
-                        <p class="font-weight-light text-decoration-line-through">{{ unitPrice }}€ </p>
-                        <p>{{ unitPrice * ( 1 - ( offer.promotionPercentage / 100 )) }}€ ( -{{ offer.promotionPercentage }}% )</p>
-                    {% endif %}
-                </div>
-            </div>
-        {% endfor %}
-
-        {#
-        <h3>Offres les plus populaires</h3>
-        {% for mostPopular in mostPopulars %}
-            {{ mostPopular.name }}
-        {% endfor %}
-        #}
+        <img src="{{ asset("images/workTogetherBat.webp") }}" class="w-50 h-auto" {#style="height: auto; width: auto"#}/>
     </div>
 {% endblock %}

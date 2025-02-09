@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos offres{% endblock %}
+
+{% block body %}
+    <div class="d-flex flex-column m-4 gap-2">
+
+        <h3>Offres disponibles</h3>
+
+        <div class="d-flex flex-wrap justify-content-around gap-2 mx-5">
+        {% for offer in offers %}    
+            <div class="d-flex flex-column align-items-center gap-2 p-2 mx-4 bg-gray border border-2 border-dark text-black w-25">
+                <p class="h3 display-6 text-center">{{ offer.name }}</p>
+                {% if offer.unitLimit > 1 %}
+                    <p>{{ offer.unitLimit }} unités</p>
+                {% else %}
+                    <p>{{ offer.unitLimit }} unité</p>
+                {% endif %}
+                <div class="d-flex flex-row gap-2">
+                    <p>Prix : </p> 
+                    {% if offer.promotionPercentage == 0 %}
+                        <p>{{ unitPrice }}€</p>
+                    {% else %}
+                        <p class="font-weight-light text-decoration-line-through">{{ offer.unitLimit * unitPrice }}€ </p>
+                        <p>{{ offer.unitLimit * unitPrice * ( 1 - ( offer.promotionPercentage / 100 )) }}€ ( -{{ offer.promotionPercentage }}% )</p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+
+        {#
+        <h3>Offres les plus populaires</h3>
+        {% for mostPopular in mostPopulars %}
+            {{ mostPopular.name }}
+        {% endfor %}
+        #}
+    </div>
+{% endblock %}
