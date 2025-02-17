@@ -31,6 +31,9 @@
 
                 {% if not is_granted("IS_AUTHENTIFICATED_FULLY") %}
                     <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                        <a href="{{ path('register')}}" class="text-white p-2 font-weight-bold text-decoration-none">S'inscrire</a>    
+                    </button>
+                    <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
                         <a href="" class="text-white p-2 font-weight-bold text-decoration-none">Se connecter</a>    
                     </button>
                 {% else %}
