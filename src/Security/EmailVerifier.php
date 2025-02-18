@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\Customer;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -20,7 +21,7 @@ class EmailVerifier
     ) {
     }
 
-    public function sendEmailConfirmation(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void
+    public function sendEmailConfirmation(string $verifyEmailRouteName, Customer $user, TemplatedEmail $email): void
     {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,
@@ -41,7 +42,7 @@ class EmailVerifier
     /**
      * @throws VerifyEmailExceptionInterface
      */
-    public function handleEmailConfirmation(Request $request, User $user): void
+    public function handleEmailConfirmation(Request $request, Customer $user): void
     {
         $this->verifyEmailHelper->validateEmailConfirmationFromRequest($request, (string) $user->getId(), (string) $user->getMailAddress());
 
