@@ -15,9 +15,16 @@ use App\Entity\User;
 use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private UserPasswordHasherInterface $hasher;
+
+    public function __construct(UserPasswordHasherInterface $userPasswordHasherInterface) {
+        $this->hasher = $userPasswordHasherInterface;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $states = [
@@ -54,8 +61,8 @@ class AppFixtures extends Fixture
             ["Acheter une unité",0,1,true],
         ];
         $orderDates = [
-            [new DateTimeImmutable("2024-01-01"), new DateTimeImmutable("2024-06-01")],
-            [new DateTimeImmutable("2024-04-08"), new DateTimeImmutable("2024-10-08")],
+            [new DateTimeImmutable("2024-01-01"), new DateTimeImmutable("2025-06-01")],
+            [new DateTimeImmutable("2024-04-08"), new DateTimeImmutable("2026-10-08")],
             [new DateTimeImmutable("2023-04-18"), new DateTimeImmutable("2024-11-18")],
         ];
 
@@ -116,8 +123,11 @@ class AppFixtures extends Fixture
             $newCustomer->setFirstname($customer[0]);
             $newCustomer->setLastname($customer[1]);
             $newCustomer->setMailAddress($customer[2]);
-            $newCustomer->setPassword($customer[3]);
             $newCustomer->setRole("ROLE_CLIENT");
+
+            $password = $this->hasher->hashPassword($newCustomer, $customer[3]);
+            $newCustomer->setPassword($password);
+
             array_push($currentCustomers,$newCustomer);
             $manager->persist($newCustomer);
         }

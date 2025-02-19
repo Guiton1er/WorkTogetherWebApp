@@ -29,19 +29,19 @@
                     <a href="{{ path('orders') }}" class="text-white p-2 font-weight-bold text-decoration-none">Commandes</a>    
                 </button>
 
-                {% if not is_granted("IS_AUTHENTIFICATED_FULLY") %}
-                    <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
-                        <a href="{{ path('register')}}" class="text-white p-2 font-weight-bold text-decoration-none">S'inscrire</a>    
-                    </button>
-                    <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
-                        <a href="{{ path('login') }}" class="text-white p-2 font-weight-bold text-decoration-none">Se connecter</a>    
-                    </button>
-                {% else %}
+                {% if is_granted('ROLE_USER') %}
                     <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
                         <a href="{{ path('profil') }}" class="text-white p-2 font-weight-bold text-decoration-none">Profil</a>    
                     </button>
                     <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
                         <a href="{{ path('logout') }}" class="text-white p-2 font-weight-bold text-decoration-none">Se déconnecter</a>    
+                    </button>
+                {% else %}
+                    <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                        <a href="{{ path('register')}}" class="text-white p-2 font-weight-bold text-decoration-none">S'inscrire</a>    
+                    </button>
+                    <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                        <a href="{{ path('login') }}" class="text-white p-2 font-weight-bold text-decoration-none">Se connecter</a>    
                     </button>
                 {% endif %}
             </div>

@@ -11,8 +11,13 @@ class OrderController extends AbstractController
     #[Route('/commandes', name: 'orders')]
     public function index(): Response
     {
+        if ($this->getUser()) 
+        {
+            $orders = $this->getUser()->getOrders();
+        }
+
         return $this->render('order/index.html.twig', [
-            'controller_name' => 'OrderController',
+            'orders' => $orders,
         ]);
     }
 }
