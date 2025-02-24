@@ -1,0 +1,112 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profil{% endblock %}
+
+{% block body %}
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+
+                <h2 class="text-center mb-4">Mon profil</h2>
+
+                <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                    <a href="{{ path('orders') }}" class="text-white p-2 font-weight-bold text-decoration-none">Commandes</a>    
+                </button>
+
+                {{ form_start(profilForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.firstname, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.firstname, {'attr': {'class': 'form-control' ~ (profilForm.firstname.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.firstname) }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.lastname, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.lastname, {'attr': {'class': 'form-control' ~ (profilForm.lastname.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.lastname) }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.mailAddress, 'Adresse email', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.mailAddress, {'attr': {'class': 'form-control' ~ (profilForm.mailAddress.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.mailAddress) }}
+                    </div>
+                </div>
+
+                {#  Vérification du mot de passe  #}
+                <div class="mb-3">
+                    {{ form_label(profilForm.currentPassword, 'Mot de passe actuel', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.currentPassword, {'attr': {'class': 'form-control', 'type': 'password'}}) }}
+                    {{ form_errors(profilForm.currentPassword) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.password.first, 'Nouveau mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.password.first, {'attr': {'class': 'form-control', 'type': 'password'}}) }}
+                    {{ form_errors(profilForm.password.first) }}
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.password.second, 'Confirmer le nouveau mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.password.second, {'attr': {'class': 'form-control', 'type': 'password'}}) }}
+                    {{ form_errors(profilForm.password.second) }}
+                </div>
+
+                {# <div class="mb-3">
+                    {{ form_label(profilForm.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.password, {'attr': {'class': 'form-control' ~ (profilForm.password.vars.errors|length > 0 ? ' is-invalid' : ''), 'type': 'password'}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.password) }}
+                    </div>
+                </div> #}
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.billingAddress, 'Adresse de facturation', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.billingAddress, {'attr': {'class': 'form-control' ~ (profilForm.billingAddress.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.billingAddress) }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.postCode, 'Code postal', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.postCode, {'attr': {'class': 'form-control' ~ (profilForm.postCode.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.postCode) }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.town, 'Ville', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.town, {'attr': {'class': 'form-control' ~ (profilForm.town.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.town) }}
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    {{ form_label(profilForm.country, 'Pays', {'label_attr': {'class': 'form-label'}}) }}
+                    {{ form_widget(profilForm.country, {'attr': {'class': 'form-control' ~ (profilForm.country.vars.errors|length > 0 ? ' is-invalid' : '')}}) }}
+                    <div class="invalid-feedback">
+                        {{ form_errors(profilForm.country) }}
+                    </div>
+                </div>
+
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+
+                {{ form_end(profilForm) }}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

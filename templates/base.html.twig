@@ -25,10 +25,6 @@
                     <a href="{{ path('offers') }}" class="text-white p-2 font-weight-bold text-decoration-none">Offres</a>    
                 </button>
 
-                <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
-                    <a href="{{ path('orders') }}" class="text-white p-2 font-weight-bold text-decoration-none">Commandes</a>    
-                </button>
-
                 {% if is_granted('ROLE_USER') %}
                     <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
                         <a href="{{ path('profil') }}" class="text-white p-2 font-weight-bold text-decoration-none">Profil</a>    

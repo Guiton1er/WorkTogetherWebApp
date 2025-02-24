@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commandes{% endblock %}
+
+{% block body %}
+
+    <div class="container my-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6 mb-5">
+
+                <h2 class="text-center mb-4">Commandes actives</h2>
+                {% for order in orders %}
+                    <p>{{ order.unitPrice }}</p>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
