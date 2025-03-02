@@ -3,44 +3,45 @@
 {% block title %}Connexion{% endblock %}
 
 {% block body %}
-    <div class="container mt-5">
+    <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-md-6 mb-5">
+            <div class="col-md-6 p-4">
+
                 <form method="post">
                     {% if error %}
-                        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        <div class="alert alert-danger text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
                     {% endif %}
 
                     {% if app.user %}
-                        <div class="mb-4">
-                            Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('logout') }}">Se déconnecter</a>
+                        <div class="alert alert-info text-center">
+                            Vous êtes connecté en tant que <strong>{{ app.user.userIdentifier }}</strong>, 
+                            <a href="{{ path('logout') }}" class="text-decoration-none fw-bold">Se déconnecter</a>
                         </div>
                     {% endif %}
 
-                    <h1 class="h3 mb-4 font-weight-normal">Veuillez vous connecter</h1>
-                    <label for="username">Adresse Mail</label>
-                    <input type="text" value="{{ last_username }}" name="_username" id="username" class="form-control mb-4" autocomplete="username" required autofocus>
-                    <label for="password">Mot de passe</label>
-                    <input type="password" name="_password" id="password" class="form-control mb-4" autocomplete="current-password" required>
+                    <p class="h3 mb-4 text-center text-primary fw-bold">Veuillez vous connecter</p>
+                    
+                    <div class="mb-3">
+                        <label for="username" class="form-label fw-bold">Adresse Mail</label>
+                        <input type="text" value="{{ last_username }}" name="_username" id="username" 
+                                class="form-control" autocomplete="username" required autofocus>
+                    </div>
 
-                    <input type="hidden" name="_csrf_token"
-                        value="{{ csrf_token('authenticate') }}"
-                    >
+                    <div class="mb-3">
+                        <label for="password" class="form-label fw-bold">Mot de passe</label>
+                        <input type="password" name="_password" id="password" 
+                                class="form-control" autocomplete="current-password" required>
+                    </div>
 
-                    {#
-                        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-                        See https://symfony.com/doc/current/security/remember_me.html
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-                        <div class="checkbox mb-3">
-                            <input type="checkbox" name="_remember_me" id="_remember_me">
-                            <label for="_remember_me">Remember me</label>
-                        </div>
-                    #}
-
-                    <button class="btn btn-lg btn-primary mb-4" type="submit">
-                        Connexion
-                    </button>
+                    <div class="d-grid">
+                        <button class="btn btn-primary btn-lg fw-bold" type="submit">
+                            Connexion
+                        </button>
+                    </div>
                 </form>
+
             </div>
         </div>
     </div>

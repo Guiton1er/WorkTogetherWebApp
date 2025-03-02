@@ -6,16 +6,38 @@
 
     <div class="container my-5">
         <div class="row justify-content-center">
-            <div class="col-md-6">
+            <div class="col-md-6 p-4">
 
-                <h2 class="text-center mb-4">Mon profil</h2>
+                <h2 class="text-center mb-4 text-primary fw-bold">Mon profil</h2>
 
-                <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
-                    <a href="{{ path('orders') }}" class="text-white p-2 font-weight-bold text-decoration-none">Commandes</a>    
-                </button>
-                <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
-                    <a href="{{ path('profil_modify') }}" class="text-white p-2 font-weight-bold text-decoration-none">Modifier mon profil</a>    
-                </button>
+                <div class="d-flex justify-content-center gap-3 mb-3">
+                    <a href="{{ path('orders') }}" class="btn btn-dark">Mes commandes</a>  
+                    <a href="{{ path('profil_modify') }}" class="btn btn-secondary">Modifier mon profil</a>    
+                </div>
+
+                <hr>
+
+                <div class="mb-2">
+                    <strong>Prénom :</strong> {{ user.firstname }}
+                </div>
+                <div class="mb-2">
+                    <strong>Nom :</strong> {{ user.lastname }}
+                </div>
+                <div class="mb-2">
+                    <strong>Email :</strong> {{ user.mailAddress }}
+                </div>
+                <div class="mb-2">
+                    <strong>Adresse :</strong> {{ user.billingAddress }}
+                </div>
+                <div class="mb-2">
+                    <strong>Code postal :</strong> {{ user.postCode }}
+                </div>
+                <div class="mb-2">
+                    <strong>Ville :</strong> {{ user.town }}
+                </div>
+                <div class="mb-2">
+                    <strong>Pays :</strong> {{ user.country }}
+                </div>
 
             </div>
         </div>

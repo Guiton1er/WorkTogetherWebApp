@@ -31,7 +31,6 @@ class ProfilType extends AbstractType
                 ],
             ])
 
-
             ->add('currentPassword', PasswordType::class, [
                 'mapped' => false, // Ce champ n'existe pas dans l'entité
                 'required' => true,
@@ -56,19 +55,6 @@ class ProfilType extends AbstractType
                     ]),
                 ]
             ])
-
-            // ->add('password', PasswordType::class, [
-            //     'required' => $options['required'],
-            //     'constraints' => [
-            //         new Assert\NotBlank(['message' => 'Le mot de passe est obligatoire.']),
-            //         new Assert\Length([
-            //             'min' => 6,
-            //             'max' => 255,
-            //             'minMessage' => 'Le mot de passe doit contenir au moins {{ limit }} caractères.',
-            //         ]),
-            //     ],
-            //     'empty_data' => '', // Empêche d'avoir une valeur null
-            // ])
 
             ->add('mailAddress', EmailType::class, [
                 'constraints' => [

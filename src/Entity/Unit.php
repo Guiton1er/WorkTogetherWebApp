@@ -36,11 +36,8 @@ class Unit
     #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'unit')]
     private Collection $interventions;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'units')]
-    private Collection $orders;
+    #[ORM\ManyToOne(inversedBy: 'units')]
+    private ?Order $currentOrder = null;
 
     public function __construct()
     {
@@ -131,26 +128,14 @@ class Unit
         return $this;
     }
 
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
+    public function getCurrentOrder(): ?Order
     {
-        return $this->orders;
+        return $this->currentOrder;
     }
 
-    public function addOrder(Order $order): static
+    public function setCurrentOrder(?Order $currentOrder): static
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-        }
-
-        return $this;
-    }
-
-    public function removeOrder(Order $order): static
-    {
-        $this->orders->removeElement($order);
+        $this->currentOrder = $currentOrder;
 
         return $this;
     }

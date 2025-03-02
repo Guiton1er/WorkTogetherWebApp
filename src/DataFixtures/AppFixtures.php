@@ -29,14 +29,14 @@ class AppFixtures extends Fixture
     {
         $states = [
             "OK" => "#02c41c", 
-            "Arrêt" => "#36010d", 
+            "Arrêt" => "#cc1616", 
             "Incident" => "#fcba03", 
             "Maintenance" => "#04d6d6"
         ];
         $unitTypes = [
             "Inutilisé" => "#403f3f",
             "Serveur Web" => "#47a7c9", 
-            "Stockage" => "##6e6b6b", 
+            "Stockage" => "#6e6b6b", 
             "Base de donnée" => "#3fba60"
         ];
         $interventionType = [
@@ -54,11 +54,11 @@ class AppFixtures extends Fixture
             ["Tawfiq","CADI TAZI","tawfiq@tropfort.com","Not24Get"],
         ];
         $offers = [
-            ["Black Friday",30,10,false],
-            ["Pack Pro",20,25,true],
-            ["Pack Débutant",15,5,true],
-            ["Pack Entreprise",50,42,true],
-            ["Acheter une unité",0,1,true],
+            ["Black Friday", 30, 10, false, "Une offre exceptionnelle pour le Black Friday avec 30% de réduction sur votre achat."],
+            ["Pack Pro", 20, 25, true, "Un pack idéal pour les professionnels, offrant 20% de réduction à partir de 25 unités achetées."],
+            ["Pack Débutant", 15, 5, true, "Parfait pour les débutants, ce pack propose une réduction de 15% dès 5 unités achetées."],
+            ["Pack Entreprise", 50, 42, true, "Une solution avantageuse pour les entreprises, avec une réduction de 50% à partir de 42 unités."],
+            ["Acheter une unité", 0, 1, true, "Achetez une unité sans réduction, idéal pour les petits besoins."],
         ];
         $orderDates = [
             [new DateTimeImmutable("2024-01-01"), new DateTimeImmutable("2025-06-01")],
@@ -150,6 +150,7 @@ class AppFixtures extends Fixture
             $newOffer->setPromotionPercentage($offer[1]);
             $newOffer->setUnitLimit($offer[2]);
             $newOffer->setAvailable($offer[3]);
+            $newOffer->setDescription($offer[4]);
             array_push($currentOffers,$newOffer);
             $manager->persist($newOffer);
         }

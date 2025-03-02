@@ -14,12 +14,16 @@
 
             <div class="d-flex flex-row justify-content-center gap-4">
                 <a href="{{ path('home') }}" class="my-auto text-decoration-none">
-                    <img src="{{ asset("images/logo.webp") }}" style="height: 80px; width: auto"/>
+                    <img src="{{ asset("images/logo.webp") }}" style="height: 60px; width: auto"/>
                 </a>
                 <h1 class="align-self-center">WorkTogether</h1>
             </div>
 
             <div class="d-flex flex-row justify-content-center gap-2">
+
+                <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
+                    <a href="{{ path('home') }}" class="text-white p-2 font-weight-bold text-decoration-none">Accueil</a>    
+                </button>
 
                 <button class="bg-secondary p-2 font-weight-bold my-auto border-0">
                     <a href="{{ path('offers') }}" class="text-white p-2 font-weight-bold text-decoration-none">Offres</a>    

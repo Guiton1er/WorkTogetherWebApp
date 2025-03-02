@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ offer.name }}{% endblock %} 
+
+{% block body %}
+
+    <div class="container mt-5 p-4">
+        <p class="h3 text-center text-primary fw-bold">{{ offer.name }}</p>
+
+        <p class="text-center">
+            {% if offer.unitLimit > 1 %}
+                {{ offer.unitLimit }} unités
+            {% else %}
+                {{ offer.unitLimit }} unité
+            {% endif %}
+        </p>
+
+        <p class="text-center text-muted">{{ offer.description }}</p>
+
+        <div class="d-flex justify-content-center align-items-center gap-2">
+            <p class="fw-bold">Prix :</p> 
+            {% if offer.promotionPercentage == 0 %}
+                <p class="fs-5">{{ unitPrice }}€</p>
+            {% else %}
+                <p class="text-decoration-line-through text-muted">{{ offer.unitLimit * unitPrice }}€</p>
+                <p class="fs-5 text-success">
+                    {{ offer.unitLimit * unitPrice * (1 - (offer.promotionPercentage / 100)) }}€ 
+                    (-{{ offer.promotionPercentage }}%)
+                </p>
+            {% endif %}
+        </div>
+
+        <div class="d-flex justify-content-center mt-3">
+            {% if isCurrentlyAvailable %}
+                <form method="post" action="{{ path('offer', {'id': offer.id}) }}">
+                    <button type="submit" class="btn btn-primary">Commander</button>
+                </form>
+            {% else %}
+                <p class="text-decoration-line-through text-muted">Offre non disponible actuellement</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

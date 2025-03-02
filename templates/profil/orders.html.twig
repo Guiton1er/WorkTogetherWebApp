@@ -5,14 +5,90 @@
 {% block body %}
 
     <div class="container my-5">
+        <h2 class="text-center mb-4 text-primary fw-bold">Commandes actives</h2>
+
         <div class="row justify-content-center">
-            <div class="col-md-6 mb-5">
-
-                <h2 class="text-center mb-4">Commandes actives</h2>
+            <div class="col-md-8">
                 {% for order in orders %}
-                    <p>{{ order.unitPrice }}</p>
-                {% endfor %}
+                    <div class="card border border-2 border-dark mb-4 p-4">
+                        <div class="card-body">
+                            <h5 class="card-title fw-bold">Commande du {{ order.startDate|date('d/m/Y') }}</h5>
+                            
+                            <p class="text-muted">
+                                Fin prévue :
+                                {% if order.endDate is not null %}
+                                    {{ order.endDate|date('d/m/Y') }}
+                                {% else %}
+                                    Non définie
+                                {% endif %}
+                            </p>
 
+                            <hr>
+
+                            {% if order.units != null %}
+                                <h6 class="fw-bold">Unités :</h6>
+                                <div class="row">
+                                    {% for unit in order.units %}
+                                        <div class="col-md-6 mb-2">
+                                            <div class="p-3 border rounded fw-bold d-flex justify-content-between align-items-center bg-light">
+                                                
+                                                <!-- Petit cercle pour l'état -->
+                                                <span class="me-2 d-inline-block rounded-circle"
+                                                    style="width: 12px; height: 12px; background-color: {{ unit.state.color }};">
+                                                </span>
+
+                                                <span>{{ unit.reference }}</span>
+
+                                                <!-- Petit cercle pour le type -->
+                                                <span class="me-2 d-inline-block rounded-circle"
+                                                    style="width: 12px; height: 12px; background-color: {{ unit.type.color }};">
+                                                </span>
+
+                                                {% if unit.state.name == 'Arrêt' %}
+                                                    <form method="POST" class="d-inline">
+                                                        <input type="hidden" name="start_unit" value="{{ unit.id }}">
+                                                        <button type="submit" class="btn btn-sm btn-success">Démarrer</button>
+                                                    </form>
+                                                {% elseif unit.state.name == 'OK' %}
+                                                    <form method="POST" class="d-inline">
+                                                        <input type="hidden" name="stop_unit" value="{{ unit.id }}">
+                                                        <button type="submit" class="btn btn-sm btn-danger">Arrêter</button>
+                                                    </form>
+                                                {% endif %}
+
+
+                                                <!-- Sélecteur de type d'unité -->
+                                                <form method="POST" class="ms-2">
+                                                    <input type="hidden" name="unit_id" value="{{ unit.id }}">
+                                                    <select name="unit_type" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                        {% for unitType in unitTypes %}
+                                                            <option value="{{ unitType.id }}" {% if unit.type == unitType %}selected{% endif %}>
+                                                                {{ unitType.reference }}
+                                                            </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </form>
+                                            
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                            {% if order.endDate is null or order.endDate < "now"|date() %}
+                                <form method="POST" class="mt-3 d-flex">
+                                    <input type="datetime-local" name="end_date" class="form-control me-2">
+                                    <input type="hidden" name="update_end_date" value="{{ order.id }}">
+                                    <button type="submit" class="btn btn-warning">
+                                        Modifier la date de fin
+                                    </button>
+                                </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                {% else %}
+                    <p class="text-center text-muted">Vous n'avez pas de commandes actives.</p>
+                {% endfor %}
             </div>
         </div>
     </div>

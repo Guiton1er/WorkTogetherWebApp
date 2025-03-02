@@ -2,12 +2,18 @@
 
 namespace App\Controller;
 
+use App\Entity\Order;
+use App\Entity\State;
+use App\Entity\Unit;
 use App\Form\ProfilType;
+use App\Repository\StateRepository;
+use App\Repository\UnitRepository;
+use App\Repository\UnitTypeRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Doctrine\ORM\EntityManagerInterface; // Import correct
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -16,8 +22,16 @@ class ProfilController extends AbstractController
     #[Route('/profil', name: 'profil')]
     public function profil(): Response
     {
-        return $this->render('profil/profil.html.twig', [
-        ]);
+        if ($this->getUser()) 
+        {
+            $user = $this ->getUser();
+            
+            return $this->render('profil/profil.html.twig', [
+                'user' => $user,
+            ]);
+        }
+
+        return $this->redirectToRoute('login');
     }
 
     #[Route('/profil/modify', name: 'profil_modify')]
@@ -58,18 +72,108 @@ class ProfilController extends AbstractController
         return $this->redirectToRoute('login');
     }
 
-    #[Route('/profil/commandes', name: 'orders')]
-    public function orders(): Response
-    {
-        if ($this->getUser()) 
-        {
-            $orders = $this->getUser()->getOrders();
+    // #[Route('/profil/commandes', name: 'orders')]
+    // public function orders(): Response
+    // {
+    //     if ($this->getUser()) 
+    //     {
+    //         $orders = $this->getUser()->getOrders();
 
-            return $this->render('profil/orders.html.twig', [
-                'orders' => $orders,
-            ]);
+    //         return $this->render('profil/orders.html.twig', [
+    //             'orders' => $orders,
+    //         ]);
+    //     }
+
+    //     return $this->redirectToRoute('login');
+    // }
+
+    #[Route('/profil/commandes', name: 'orders')]
+    public function orders(
+        Request $request, 
+        EntityManagerInterface $entityManager, 
+        UnitRepository $unitRepository, 
+        StateRepository $stateRepository,
+        UnitTypeRepository $unitTypeRepository
+        ): Response
+    {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('login');
         }
 
-        return $this->redirectToRoute('login');
+        $orders = $this->getUser()->getOrders();
+        $unitTypes = $unitTypeRepository->findAll();
+
+        // Démarrer une unité
+        if ($request->request->has('start_unit')) {
+            $unitId = $request->request->get('start_unit');
+            $unit = $unitRepository->find($unitId);
+
+            if ($unit && $unit->getState()->getName() === 'Arrêt') {
+                $unit->setState($entityManager->getRepository(State::class)->findOneBy(['name' => 'OK']));
+                $entityManager->persist($unit);
+                $entityManager->flush();
+                $this->addFlash('success', 'L’unité a bien été démarrée.');
+            }
+            return $this->redirectToRoute('orders');
+        }
+
+        // Arrêter une unité
+        if ($request->request->has('stop_unit')) {
+            $unitId = $request->request->get('stop_unit');
+            $unit = $unitRepository->find($unitId);
+
+            if ($unit && $unit->getState()->getName() === 'OK') {
+                $unit->setState($entityManager->getRepository(State::class)->findOneBy(['name' => 'Arrêt']));
+                $entityManager->persist($unit);
+                $entityManager->flush();
+                $this->addFlash('success', 'L’unité a bien été arrêtée.');
+            }
+            return $this->redirectToRoute('orders');
+        }
+
+        // Vérifier si un changement de type a été demandé
+        if ($request->isMethod('POST') && $request->request->has('unit_id') && $request->request->has('unit_type')) {
+            $unitId = $request->request->get('unit_id');
+            $newType = $request->request->get('unit_type');
+            $unit = $unitRepository->find($unitId);
+
+            if ($unit && $unit->getCurrentOrder()->getCustomer() === $this->getUser()) {
+                // Mettre à jour le type
+                $unit->setType($unitTypeRepository->find($newType));
+                $entityManager->persist($unit);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('orders'); // Recharge la page
+        }
+
+        // Modifier la date de fin d'une commande
+        if ($request->request->has('update_end_date')) {
+            $orderId = $request->request->get('update_end_date');
+            $order = $entityManager->getRepository(Order::class)->find($orderId);
+
+            if ($order && ($order->getEndDate() === null || $order->getEndDate() > new \DateTime())) {
+                $newEndDate = $request->request->get('end_date');
+
+                if ($newEndDate) {
+                    try {
+                        $order->setEndDate(new \DateTime($newEndDate));
+                        $entityManager->persist($order);
+                        $entityManager->flush();
+                        $this->addFlash('success', 'Date de fin mise à jour.');
+                    } catch (\Exception $e) {
+                        $this->addFlash('danger', 'Format de date invalide.');
+                    }
+                } else {
+                    $this->addFlash('warning', 'Veuillez saisir une date.');
+                }
+            }
+            return $this->redirectToRoute('orders');
+        }
+
+        return $this->render('profil/orders.html.twig', [
+            'orders' => $orders,
+            'unitTypes' => $unitTypes,
+        ]);
     }
 }

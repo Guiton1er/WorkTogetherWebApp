@@ -26,12 +26,6 @@ class Order
     #[ORM\Column]
     private ?float $unitPrice = null;
 
-    /**
-     * @var Collection<int, Unit>
-     */
-    #[ORM\ManyToMany(targetEntity: Unit::class, mappedBy: 'orders')]
-    private Collection $units;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     private ?Offer $offer = null;
@@ -39,6 +33,12 @@ class Order
     #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
+
+    /**
+     * @var Collection<int, Unit>
+     */
+    #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'currentOrder')]
+    private Collection $units;
 
     public function __construct()
     {
@@ -86,33 +86,6 @@ class Order
         return $this;
     }
 
-    /**
-     * @return Collection<int, Unit>
-     */
-    public function getUnits(): Collection
-    {
-        return $this->units;
-    }
-
-    public function addUnit(Unit $unit): static
-    {
-        if (!$this->units->contains($unit)) {
-            $this->units->add($unit);
-            $unit->addOrder($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUnit(Unit $unit): static
-    {
-        if ($this->units->removeElement($unit)) {
-            $unit->removeOrder($this);
-        }
-
-        return $this;
-    }
-
     public function getOffer(): ?Offer
     {
         return $this->offer;
@@ -133,6 +106,38 @@ class Order
     public function setCustomer(?Customer $customer): static
     {
         $this->customer = $customer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Unit>
+     */
+    public function getUnits(): Collection
+    {
+        return $this->units;
+    }
+
+    public function addUnit(Unit $unit): static
+    {
+        if (!$this->units->contains($unit)) {
+            $this->units->add($unit);
+            $unit->setCurrentOrder($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUnit(Unit $unit): static
+    {
+        if ($this->units->removeElement($unit)) 
+        {
+            // set the owning side to null (unless already changed)
+            if ($unit->getCurrentOrder() === $this) 
+            {
+                $unit->setCurrentOrder(null);
+            }
+        }
 
         return $this;
     }
