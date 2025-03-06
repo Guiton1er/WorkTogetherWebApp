@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Repository\OrderRepository;
 use App\Repository\UnitRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -36,8 +37,11 @@ class Unit
     #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'unit')]
     private Collection $interventions;
 
-    #[ORM\ManyToOne(inversedBy: 'units')]
-    private ?Order $currentOrder = null;
+    /**
+     * @var Collection<int, Order>
+     */
+    #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'units')]
+    private Collection $orders;
 
     public function __construct()
     {
@@ -128,15 +132,32 @@ class Unit
         return $this;
     }
 
-    public function getCurrentOrder(): ?Order
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
     {
-        return $this->currentOrder;
+        return $this->orders;
     }
 
-    public function setCurrentOrder(?Order $currentOrder): static
+    public function addOrder(Order $order): static
     {
-        $this->currentOrder = $currentOrder;
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+        }
 
         return $this;
+    }
+
+    public function removeOrder(Order $order): static
+    {
+        $this->orders->removeElement($order);
+
+        return $this;
+    }
+
+    public function getCurrentOrder(OrderRepository $orderRepository): Order
+    {
+        return $orderRepository->findActiveFromCollection($this->getOrders());
     }
 }

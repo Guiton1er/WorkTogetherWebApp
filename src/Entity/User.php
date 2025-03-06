@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\DiscriminatorMap;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -30,9 +31,15 @@ class User
 
     #[ORM\Column(length: 255)]
     private ?string $mailAddress = null;
+    
+    #[ORM\Column(type: Types::JSON)]
+    private $roles = [];
 
-    #[ORM\Column(length: 255)]
-    private ?string $role = null;
+    #[ORM\Column]
+    private bool $isVerified = false;
+
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $attempts = null;
 
     public function getId(): ?int
     {
@@ -87,26 +94,6 @@ class User
         return $this;
     }
 
-    public function getRole(): ?string
-    {
-        return $this->role;
-    }
-
-    public function setRole(string $role): static
-    {
-        $this->role = $role;
-
-        return $this;
-    }
-
-     /**
-     * @ORM\Column(type="json")
-     */
-    private $roles = [];
-
-    #[ORM\Column]
-    private bool $isVerified = false;
-
     /**
      * A visual identifier that represents this user.
      *
@@ -148,6 +135,18 @@ class User
     public function setVerified(bool $isVerified): static
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    public function getAttempts(): ?int
+    {
+        return $this->attempts;
+    }
+
+    public function setAttempts(int $attempts): static
+    {
+        $this->attempts = $attempts;
 
         return $this;
     }

@@ -70,6 +70,7 @@ class AppFixtures extends Fixture
         $currentOffers = [];
         $currentStates = [];
         $currentTypes = [];
+        $currentUnits = [];
 
         $setting = new Setting();
         $setting->setSettingKey("currentUnitPrice");
@@ -113,6 +114,7 @@ class AppFixtures extends Fixture
                 $unit->setBay($bay);
                 $unit->setState($currentStates[1]);
                 $unit->setType($currentTypes[0]);
+                array_push($currentUnits, $unit);
                 $manager->persist($unit);
             }
         }
@@ -123,7 +125,8 @@ class AppFixtures extends Fixture
             $newCustomer->setFirstname($customer[0]);
             $newCustomer->setLastname($customer[1]);
             $newCustomer->setMailAddress($customer[2]);
-            $newCustomer->setRole("ROLE_CLIENT");
+            $newCustomer->setRoles(["ROLE_CLIENT"]);
+            $newCustomer->setAttempts(0);
 
             $password = $this->hasher->hashPassword($newCustomer, $customer[3]);
             $newCustomer->setPassword($password);
@@ -139,7 +142,8 @@ class AppFixtures extends Fixture
             $newUser->setLastname($user[1]);
             $newUser->setMailAddress($user[2]);
             $newUser->setPassword($user[3]);
-            $newUser->setRole("ROLE_ADMIN");
+            $newUser->setRoles(["ROLE_ADMIN"]);
+            $newUser->setAttempts(0);
             $manager->persist($newUser);
         }
 
@@ -163,6 +167,9 @@ class AppFixtures extends Fixture
             $newOrder->setCustomer($currentCustomers[$i]);
             $newOrder->setOffer($currentOffers[$i]);
             $newOrder->setUnitPrice($setting->getValue());
+            for ($j=0; $j < $newOffer->getUnitLimit(); $j++) {
+                $newOrder->addUnit($currentUnits[$j + 42*$i]);
+            }
             $manager->persist($newOrder);
         }
 

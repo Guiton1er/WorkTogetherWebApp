@@ -10,6 +10,10 @@
 
                 <h2 class="text-center mb-4">Modification du profil</h2>
 
+                <div class="d-flex justify-content-center gap-3 mb-3">
+                    <a href="{{ path('profil_modify_password') }}" class="btn btn-secondary">Modifier mon mot de passe</a>    
+                </div>
+
                 {{ form_start(profilForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
                 <div class="mb-3">

@@ -37,7 +37,7 @@ class Order
     /**
      * @var Collection<int, Unit>
      */
-    #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'currentOrder')]
+    #[ORM\ManyToMany(targetEntity: Unit::class, mappedBy: 'orders')]
     private Collection $units;
 
     public function __construct()
@@ -122,7 +122,7 @@ class Order
     {
         if (!$this->units->contains($unit)) {
             $this->units->add($unit);
-            $unit->setCurrentOrder($this);
+            $unit->addOrder($this);
         }
 
         return $this;
@@ -130,13 +130,8 @@ class Order
 
     public function removeUnit(Unit $unit): static
     {
-        if ($this->units->removeElement($unit)) 
-        {
-            // set the owning side to null (unless already changed)
-            if ($unit->getCurrentOrder() === $this) 
-            {
-                $unit->setCurrentOrder(null);
-            }
+        if ($this->units->removeElement($unit)) {
+            $unit->removeOrder($this);
         }
 
         return $this;

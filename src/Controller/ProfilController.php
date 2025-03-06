@@ -6,6 +6,7 @@ use App\Entity\Order;
 use App\Entity\State;
 use App\Entity\Unit;
 use App\Form\ProfilType;
+use App\Repository\OrderRepository;
 use App\Repository\StateRepository;
 use App\Repository\UnitRepository;
 use App\Repository\UnitTypeRepository;
@@ -72,43 +73,49 @@ class ProfilController extends AbstractController
         return $this->redirectToRoute('login');
     }
 
-    // #[Route('/profil/commandes', name: 'orders')]
-    // public function orders(): Response
-    // {
-    //     if ($this->getUser()) 
-    //     {
-    //         $orders = $this->getUser()->getOrders();
-
-    //         return $this->render('profil/orders.html.twig', [
-    //             'orders' => $orders,
-    //         ]);
-    //     }
-
-    //     return $this->redirectToRoute('login');
-    // }
-
     #[Route('/profil/commandes', name: 'orders')]
     public function orders(
         Request $request, 
         EntityManagerInterface $entityManager, 
         UnitRepository $unitRepository, 
         StateRepository $stateRepository,
-        UnitTypeRepository $unitTypeRepository
+        UnitTypeRepository $unitTypeRepository,
+        OrderRepository $orderRepository
         ): Response
     {
         if (!$this->getUser()) {
             return $this->redirectToRoute('login');
         }
 
-        $orders = $this->getUser()->getOrders();
+        $user = $this->getUser();
+        $orders = $user->getOrders();
         $unitTypes = $unitTypeRepository->findAll();
+        $unitStates = $stateRepository->findAll();
+        $nbrActiveOrders = count($orderRepository->findActives($user));
+        $nbrInactivesOrders = count($orderRepository->findBy(['customer' => $user])) - $nbrActiveOrders;
+
+        // $nbrUnitsByType = [];
+        // foreach ($unitTypes as $unitType ) 
+        // {
+        //     $nbrUnitsByType[$unitType->getReference()] = 
+        //     count($unitRepository->findByType($unitType->getId(), $user));
+        // }
+
+        // $nbrUnitsByState = [];
+        // foreach ($unitStates as $unitState ) 
+        // {
+        //     $nbrUnitsByState[$unitState->getName()] = 
+        //     count($unitRepository->findByState($unitState->getId(), $user));
+        // }
 
         // Démarrer une unité
-        if ($request->request->has('start_unit')) {
+        if ($request->request->has('start_unit')) 
+        {
             $unitId = $request->request->get('start_unit');
             $unit = $unitRepository->find($unitId);
 
-            if ($unit && $unit->getState()->getName() === 'Arrêt') {
+            if ($unit && $unit->getState()->getName() === 'Arrêt') 
+            {
                 $unit->setState($entityManager->getRepository(State::class)->findOneBy(['name' => 'OK']));
                 $entityManager->persist($unit);
                 $entityManager->flush();
@@ -173,7 +180,12 @@ class ProfilController extends AbstractController
 
         return $this->render('profil/orders.html.twig', [
             'orders' => $orders,
+            'nbrInactivesOrders' => $nbrInactivesOrders,
+            'nbrActiveOrders' => $nbrActiveOrders,
             'unitTypes' => $unitTypes,
+            //'nbrUnitsByType' => $nbrUnitsByType,
+            'unitStates' => $unitStates,
+            //'nbrUnitsByState' => $nbrUnitsByState,
         ]);
     }
 }

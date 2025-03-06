@@ -32,7 +32,7 @@
 
         <div class="d-flex justify-content-center mt-3">
             {% if isCurrentlyAvailable %}
-                <form method="post" action="{{ path('offer', {'id': offer.id}) }}">
+                <form method="post" action="{{ path('offer_POST', {'id': offer.id}) }}">
                     <button type="submit" class="btn btn-primary">Commander</button>
                 </form>
             {% else %}

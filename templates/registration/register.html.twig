@@ -43,6 +43,7 @@
                     <label for="agreeTerms" class="form-check-label">
                         J'accepte les <a href="#">termes et conditions d'utilisation</a>
                     </label>
+                    {{ form_label(registrationForm.agreeTerms, {'label_attr': {'class': 'fw-bold'}}) }}
                     {{ form_widget(registrationForm.agreeTerms, { 'id': 'agreeTerms', 'attr': {'class': 'form-check-input'} }) }}
                     {{ form_errors(registrationForm.agreeTerms) }}
                 </div>

@@ -9,6 +9,28 @@
 
         <div class="row justify-content-center">
             <div class="col-md-8">
+
+                <div class="card border border-2 border-dark mb-4 p-4">
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold">Statistiques du profil</h5>
+
+                        <p>Nombre de commande actives : {{ nbrActiveOrders }}</p>
+                        <p>Nombre de commande inactives: {{ nbrInactivesOrders }}</p>
+
+                        <hr>
+{# 
+                        {% for type in unitTypes %}
+                            <p>Nombre d'unités de type {{ type.reference }} : {{ nbrUnitsByType[type.reference] }}</p>
+                        {% endfor %}
+
+                        <hr>
+
+                        {% for state in unitStates %}
+                            <p>Nombre d'unités de statut {{ state.name }} : {{ nbrUnitsByState[state.name] }}</p>
+                        {% endfor %} #}
+
+                    </div>
+                </div>
                 {% for order in orders %}
                     <div class="card border border-2 border-dark mb-4 p-4">
                         <div class="card-body">
@@ -75,7 +97,7 @@
                                 </div>
                             {% endif %}
 
-                            {% if order.endDate is null or order.endDate < "now"|date() %}
+                            {% if order.endDate is null or order.endDate >= "now"|date() %}
                                 <form method="POST" class="mt-3 d-flex">
                                     <input type="datetime-local" name="end_date" class="form-control me-2">
                                     <input type="hidden" name="update_end_date" value="{{ order.id }}">
