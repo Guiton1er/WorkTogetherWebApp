@@ -34,7 +34,7 @@ class OrderRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findActiveFromCollection($orders): Order
+    public function findActiveFromCollection($orders): ?Order
     {
         return $this->createQueryBuilder('o')
             ->andWhere('o.customer IN (:val)')
@@ -43,9 +43,8 @@ class OrderRepository extends ServiceEntityRepository
             ->setParameter('now', new \DateTime())
             ->andWhere('(o.endDate >= :now OR o.endDate IS NULL)')
             ->setParameter('now', new \DateTime())
-            ->setMaxResults(1)
             ->getQuery()
-            ->getResult()
+            ->getOneOrNullResult()
         ;
     }
 //    /**

@@ -94,20 +94,6 @@ class ProfilController extends AbstractController
         $nbrActiveOrders = count($orderRepository->findActives($user));
         $nbrInactivesOrders = count($orderRepository->findBy(['customer' => $user])) - $nbrActiveOrders;
 
-        // $nbrUnitsByType = [];
-        // foreach ($unitTypes as $unitType ) 
-        // {
-        //     $nbrUnitsByType[$unitType->getReference()] = 
-        //     count($unitRepository->findByType($unitType->getId(), $user));
-        // }
-
-        // $nbrUnitsByState = [];
-        // foreach ($unitStates as $unitState ) 
-        // {
-        //     $nbrUnitsByState[$unitState->getName()] = 
-        //     count($unitRepository->findByState($unitState->getId(), $user));
-        // }
-
         // Démarrer une unité
         if ($request->request->has('start_unit')) 
         {
@@ -144,12 +130,10 @@ class ProfilController extends AbstractController
             $newType = $request->request->get('unit_type');
             $unit = $unitRepository->find($unitId);
 
-            if ($unit && $unit->getCurrentOrder()->getCustomer() === $this->getUser()) {
-                // Mettre à jour le type
-                $unit->setType($unitTypeRepository->find($newType));
-                $entityManager->persist($unit);
-                $entityManager->flush();
-            }
+            // Mettre à jour le type
+            $unit->setType($unitTypeRepository->find($newType));
+            $entityManager->persist($unit);
+            $entityManager->flush();
 
             return $this->redirectToRoute('orders'); // Recharge la page
         }
@@ -158,8 +142,10 @@ class ProfilController extends AbstractController
         if ($request->request->has('update_end_date')) {
             $orderId = $request->request->get('update_end_date');
             $order = $entityManager->getRepository(Order::class)->find($orderId);
-
-            if ($order && ($order->getEndDate() === null || $order->getEndDate() > new \DateTime())) {
+            
+            $now = new \DateTime();
+            
+            if ($order && ($order->getEndDate() === null || $order->getEndDate()->format("d/m/y") >= $now->format("d/m/y"))) {
                 $newEndDate = $request->request->get('end_date');
 
                 if ($newEndDate) {
@@ -183,9 +169,7 @@ class ProfilController extends AbstractController
             'nbrInactivesOrders' => $nbrInactivesOrders,
             'nbrActiveOrders' => $nbrActiveOrders,
             'unitTypes' => $unitTypes,
-            //'nbrUnitsByType' => $nbrUnitsByType,
             'unitStates' => $unitStates,
-            //'nbrUnitsByState' => $nbrUnitsByState,
         ]);
     }
 }

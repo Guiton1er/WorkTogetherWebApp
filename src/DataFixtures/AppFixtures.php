@@ -50,8 +50,8 @@ class AppFixtures extends Fixture
             ["Nathan","Billaud","nathanbibi@tkt.com","azerty"],
         ];
         $users = [
-            ["Gaël","BAHIER","bahiergael@feur.com","1234"],
-            ["Tawfiq","CADI TAZI","tawfiq@tropfort.com","Not24Get"],
+            ["Gaël","BAHIER","bahiergael@feur.com","1234",["ROLE_ADMIN"]],
+            ["Tawfiq","CADI TAZI","tawfiq@tropfort.com","Not24Get",["ROLE_COMPTA"]],
         ];
         $offers = [
             ["Black Friday", 30, 10, false, "Une offre exceptionnelle pour le Black Friday avec 30% de réduction sur votre achat."],
@@ -141,9 +141,12 @@ class AppFixtures extends Fixture
             $newUser->setFirstname($user[0]);
             $newUser->setLastname($user[1]);
             $newUser->setMailAddress($user[2]);
-            $newUser->setPassword($user[3]);
-            $newUser->setRoles(["ROLE_ADMIN"]);
             $newUser->setAttempts(0);
+            
+            $password = $this->hasher->hashPassword($newUser, $user[3]);
+            $newUser->setPassword($password);
+            $newUser->setRoles($user[4]);
+
             $manager->persist($newUser);
         }
 

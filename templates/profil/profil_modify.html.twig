@@ -10,9 +10,9 @@
 
                 <h2 class="text-center mb-4">Modification du profil</h2>
 
-                <div class="d-flex justify-content-center gap-3 mb-3">
+                {# <div class="d-flex justify-content-center gap-3 mb-3">
                     <a href="{{ path('profil_modify_password') }}" class="btn btn-secondary">Modifier mon mot de passe</a>    
-                </div>
+                </div> #}
 
                 {{ form_start(profilForm, {'attr': {'class': 'needs-validation', 'novalidate': 'novalidate'}}) }}
 
@@ -58,14 +58,6 @@
                     {{ form_widget(profilForm.password.second, {'attr': {'class': 'form-control', 'type': 'password'}}) }}
                     {{ form_errors(profilForm.password.second) }}
                 </div>
-
-                {# <div class="mb-3">
-                    {{ form_label(profilForm.password, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(profilForm.password, {'attr': {'class': 'form-control' ~ (profilForm.password.vars.errors|length > 0 ? ' is-invalid' : ''), 'type': 'password'}}) }}
-                    <div class="invalid-feedback">
-                        {{ form_errors(profilForm.password) }}
-                    </div>
-                </div> #}
 
                 <div class="mb-3">
                     {{ form_label(profilForm.billingAddress, 'Adresse de facturation', {'label_attr': {'class': 'form-label'}}) }}
