@@ -44,14 +44,17 @@ class AppFixtures extends Fixture
             "Maintenance" => "#04d6d6"
         ];
         $customers = [
-            ["Lucas","Alleaume","lucassis@breizh.br","lucas29"],
             ["Killian","Bonneau","kikibobo@cepapho.fr","password"],
-            ["Rémi","GUERIN","remig@gmail.feur","security"],
+            ["Jury","E6","juryE6.client@iia.com","Jury-w€Bs1t3"],
+            ["Lucas","Alleaume","lucassis@breizh.br","lucas29"],
             ["Nathan","Billaud","nathanbibi@tkt.com","azerty"],
+            ["Rémi","GUERIN","remig@gmail.feur","security"],
         ];
         $users = [
-            ["Gaël","BAHIER","bahiergael@feur.com","1234",["ROLE_ADMIN"]],
             ["Tawfiq","CADI TAZI","tawfiq@tropfort.com","Not24Get",["ROLE_COMPTA"]],
+            ["Jury","E6","juryE6.compta@iia.com","C0mpt4-jURY",["ROLE_COMPTA"]],
+            ["Jury","E6","juryE6.admin@iia.com","4Dmin_Jury",["ROLE_ADMIN"]],
+            ["Gaël","BAHIER","bahiergael@feur.com","1234",["ROLE_ADMIN"]],
         ];
         $offers = [
             ["Black Friday", 30, 10, false, "Une offre exceptionnelle pour le Black Friday avec 30% de réduction sur votre achat."],
