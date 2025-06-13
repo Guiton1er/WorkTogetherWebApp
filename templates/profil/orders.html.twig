@@ -90,7 +90,35 @@
                                                         {% endfor %}
                                                     </select>
                                                 </form>
-                                            
+
+                                                {% if unit.type.reference != "Inutilisé" %}
+
+                                                    <!-- Sélecteur d'OS -->
+                                                    <form method="POST" class="ms-2">
+                                                        <input type="hidden" name="unit_id" value="{{ unit.id }}">
+                                                        <select name="os_choice" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
+                                                            <option value="{{ 0 }}" {% if unit.OsChoice == null %}selected{% endif %}>
+                                                                Aucun OS
+                                                            </option>
+                                                            {% for osChoice in osChoices %}
+                                                                <option value="{{ osChoice.id }}" {% if unit.OsChoice == osChoice %}selected{% endif %}>
+                                                                    {{ osChoice.name }}
+                                                                </option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </form>
+
+                                                    {% if unit.OsChoice != null %}
+
+                                                        <form method="POST" class="d-inline">
+                                                            <input type="hidden" name="install_os" value="{{ unit.id }}">
+                                                            <button type="submit" class="btn btn-sm btn-success">Installer l'OS</button>
+                                                        </form>
+
+                                                    {% endif %}
+
+                                                {% endif %}
+
                                             </div>
                                         </div>
                                     {% endfor %}

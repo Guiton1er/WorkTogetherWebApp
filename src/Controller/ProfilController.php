@@ -2,14 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Intervention;
 use App\Entity\Order;
 use App\Entity\State;
 use App\Entity\Unit;
 use App\Form\ProfilType;
+use App\Repository\InterventionRepository;
+use App\Repository\InterventionTypeRepository;
 use App\Repository\OrderRepository;
+use App\Repository\OsChoiceRepository;
 use App\Repository\StateRepository;
 use App\Repository\UnitRepository;
 use App\Repository\UnitTypeRepository;
+use DateTime;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -80,7 +85,9 @@ class ProfilController extends AbstractController
         UnitRepository $unitRepository, 
         StateRepository $stateRepository,
         UnitTypeRepository $unitTypeRepository,
-        OrderRepository $orderRepository
+        OsChoiceRepository $osChoiceRepository,
+        OrderRepository $orderRepository,
+        InterventionTypeRepository $interventionTypeRepository
         ): Response
     {
         if (!$this->getUser()) {
@@ -91,6 +98,7 @@ class ProfilController extends AbstractController
         $orders = $user->getOrders();
         $unitTypes = $unitTypeRepository->findAll();
         $unitStates = $stateRepository->findAll();
+        $osChoices = $osChoiceRepository->findAll();
         $nbrActiveOrders = count($orderRepository->findActives($user));
         $nbrInactivesOrders = count($orderRepository->findBy(['customer' => $user])) - $nbrActiveOrders;
 
@@ -138,19 +146,59 @@ class ProfilController extends AbstractController
             return $this->redirectToRoute('orders'); // Recharge la page
         }
 
+
+        // Vérifier si un changement d'OS a été demandé
+        if ($request->isMethod('POST') && $request->request->has('unit_id') && $request->request->has('os_choice')) {
+            $unitId = $request->request->get('unit_id');
+            $newOsChoice = $request->request->get('os_choice');
+            $unit = $unitRepository->find($unitId);
+
+            if ($unit->getType()->getReference() != "Inutilisé")
+            {
+                // Mettre à jour l'OS
+                $unit->setOsChoice($osChoiceRepository->find($newOsChoice));
+                $entityManager->persist($unit);
+                $entityManager->flush();
+            }
+
+            return $this->redirectToRoute('orders'); // Recharge la page
+        }
+
+        // Lancer une intervention pour installer l'OS
+        if ($request->request->has('install_os')) {
+            $unitId = $request->request->get('install_os');
+            $unit = $unitRepository->find($unitId);
+
+            if ($unit->getType()->getReference() != "Inutilisé" && $unit->getOsChoice() != null)
+            {
+                $newIntervention = new Intervention();
+                $newIntervention->setStartDate(new DateTime());
+                $newIntervention->setEndDate(new DateTime());
+                $newIntervention->setUnit($unit);
+                $interventionType = $interventionTypeRepository->findBy(["reference" => "Installation OS"]);
+                $newIntervention->setType($interventionType[0]);
+
+                $entityManager->persist($newIntervention);
+                $entityManager->flush();
+                $this->addFlash('success', 'L’intervention a bien été lancée.');
+            }
+            return $this->redirectToRoute('orders');
+        }
+
+
         // Modifier la date de fin d'une commande
         if ($request->request->has('update_end_date')) {
             $orderId = $request->request->get('update_end_date');
             $order = $entityManager->getRepository(Order::class)->find($orderId);
             
-            $now = new \DateTime();
+            $now = new DateTime();
             
             if ($order && ($order->getEndDate() === null || $order->getEndDate()->format("d/m/y") >= $now->format("d/m/y"))) {
                 $newEndDate = $request->request->get('end_date');
 
                 if ($newEndDate) {
                     try {
-                        $order->setEndDate(new \DateTime($newEndDate));
+                        $order->setEndDate(new DateTime($newEndDate));
                         $entityManager->persist($order);
                         $entityManager->flush();
                         $this->addFlash('success', 'Date de fin mise à jour.');
@@ -170,6 +218,7 @@ class ProfilController extends AbstractController
             'nbrActiveOrders' => $nbrActiveOrders,
             'unitTypes' => $unitTypes,
             'unitStates' => $unitStates,
+            'osChoices' => $osChoices,
         ]);
     }
 }

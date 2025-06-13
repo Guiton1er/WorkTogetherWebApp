@@ -43,6 +43,9 @@ class Unit
     #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'units')]
     private Collection $orders;
 
+    #[ORM\ManyToOne(inversedBy: 'units')]
+    private ?OsChoice $OsChoice = null;
+
     public function __construct()
     {
         $this->interventions = new ArrayCollection();
@@ -159,5 +162,17 @@ class Unit
     public function getCurrentOrder(OrderRepository $orderRepository): Order
     {
         return $orderRepository->findActiveFromCollection($this->getOrders());
+    }
+
+    public function getOsChoice(): ?OsChoice
+    {
+        return $this->OsChoice;
+    }
+
+    public function setOsChoice(?OsChoice $OsChoice): static
+    {
+        $this->OsChoice = $OsChoice;
+
+        return $this;
     }
 }

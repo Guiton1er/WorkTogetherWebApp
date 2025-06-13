@@ -7,6 +7,7 @@ use App\Entity\Customer;
 use App\Entity\InterventionType;
 use App\Entity\Offer;
 use App\Entity\Order;
+use App\Entity\OsChoice;
 use App\Entity\Setting;
 use App\Entity\State;
 use App\Entity\Unit;
@@ -41,7 +42,8 @@ class AppFixtures extends Fixture
         ];
         $interventionType = [
             "Incident" => "#fcba03", 
-            "Maintenance" => "#04d6d6"
+            "Maintenance" => "#04d6d6",
+            "Installation OS" => "#222222",
         ];
         $customers = [
             ["Killian","Bonneau","kikibobo@cepapho.fr","password"],
@@ -66,7 +68,12 @@ class AppFixtures extends Fixture
         $orderDates = [
             [new DateTimeImmutable("2024-01-01"), new DateTimeImmutable("2025-06-01")],
             [new DateTimeImmutable("2024-04-08"), new DateTimeImmutable("2026-10-08")],
-            [new DateTimeImmutable("2023-04-18"), new DateTimeImmutable("2024-11-18")],
+            [new DateTimeImmutable("2023-04-18"), new DateTimeImmutable("2025-11-18")],
+        ];
+        $osChoices = [
+            "Ubuntu",
+            "Debian",
+            "Windows",
         ];
 
         $currentCustomers = [];
@@ -74,6 +81,7 @@ class AppFixtures extends Fixture
         $currentStates = [];
         $currentTypes = [];
         $currentUnits = [];
+        $currentOsChoices = [];
 
         $setting = new Setting();
         $setting->setSettingKey("currentUnitPrice");
@@ -87,6 +95,14 @@ class AppFixtures extends Fixture
             $state->setColor($value);
             array_push($currentStates, $state);
             $manager->persist($state);
+        }
+
+        // ADDING DATA FOR OSCHOICES
+        foreach ($osChoices as $value) { 
+            $osChoice = new OsChoice();
+            $osChoice->setName($value);
+            array_push($currentOsChoices, $osChoice);
+            $manager->persist($osChoice);
         }
 
         // ADDING DATA FOR UNITTYPE
@@ -117,6 +133,7 @@ class AppFixtures extends Fixture
                 $unit->setBay($bay);
                 $unit->setState($currentStates[1]);
                 $unit->setType($currentTypes[0]);
+                $unit->setOsChoice(null);
                 array_push($currentUnits, $unit);
                 $manager->persist($unit);
             }
