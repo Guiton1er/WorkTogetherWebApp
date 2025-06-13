@@ -51,28 +51,28 @@
                                 <h6 class="fw-bold">Unités :</h6>
                                 <div class="row">
                                     {% for unit in order.units %}
-                                        <div class="col-md-6 mb-2">
-                                            <div class="p-3 border rounded fw-bold d-flex justify-content-between align-items-center bg-light">
+                                        <div class=" mb-2">
+                                            <div class="p-3 border rounded fw-bold d-flex align-items-center bg-light">
                                                 
                                                 <!-- Petit cercle pour l'état -->
-                                                <span class="me-2 d-inline-block rounded-circle"
+                                                <span class="me-2 d-inline-block rounded-circle mx-1"
                                                     style="width: 12px; height: 12px; background-color: {{ unit.state.color }};">
                                                 </span>
 
-                                                <span>{{ unit.reference }}</span>
+                                                <span class=" mx-1">{{ unit.reference }}</span>
 
                                                 <!-- Petit cercle pour le type -->
-                                                <span class="me-2 d-inline-block rounded-circle"
+                                                <span class="me-2 d-inline-block rounded-circle mx-1"
                                                     style="width: 12px; height: 12px; background-color: {{ unit.type.color }};">
                                                 </span>
 
                                                 {% if unit.state.name == 'Arrêt' %}
-                                                    <form method="POST" class="d-inline">
+                                                    <form method="POST" class="d-inline mx-1">
                                                         <input type="hidden" name="start_unit" value="{{ unit.id }}">
                                                         <button type="submit" class="btn btn-sm btn-success">Démarrer</button>
                                                     </form>
                                                 {% elseif unit.state.name == 'OK' %}
-                                                    <form method="POST" class="d-inline">
+                                                    <form method="POST" class="d-inline mx-1">
                                                         <input type="hidden" name="stop_unit" value="{{ unit.id }}">
                                                         <button type="submit" class="btn btn-sm btn-danger">Arrêter</button>
                                                     </form>
@@ -80,7 +80,7 @@
 
 
                                                 <!-- Sélecteur de type d'unité -->
-                                                <form method="POST" class="ms-2">
+                                                <form method="POST" class="ms-2 mx-1">
                                                     <input type="hidden" name="unit_id" value="{{ unit.id }}">
                                                     <select name="unit_type" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
                                                         {% for unitType in unitTypes %}
@@ -94,7 +94,7 @@
                                                 {% if unit.type.reference != "Inutilisé" %}
 
                                                     <!-- Sélecteur d'OS -->
-                                                    <form method="POST" class="ms-2">
+                                                    <form method="POST" class="ms-2 mx-1">
                                                         <input type="hidden" name="unit_id" value="{{ unit.id }}">
                                                         <select name="os_choice" class="form-select form-select-sm d-inline-block w-auto" onchange="this.form.submit()">
                                                             <option value="{{ 0 }}" {% if unit.OsChoice == null %}selected{% endif %}>
@@ -110,7 +110,7 @@
 
                                                     {% if unit.OsChoice != null %}
 
-                                                        <form method="POST" class="d-inline">
+                                                        <form method="POST" class="d-inline mx-1">
                                                             <input type="hidden" name="install_os" value="{{ unit.id }}">
                                                             <button type="submit" class="btn btn-sm btn-success">Installer l'OS</button>
                                                         </form>
